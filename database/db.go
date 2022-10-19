@@ -24,10 +24,11 @@ func StartDB() {
 	db, err = gorm.Open(postgres.Open(config), &gorm.Config{})
 
 	if err != nil {
-		fmt.Println("Error connecting database:", err)
+		fmt.Println("Error Starting DB:", err)
 		return
 	}
 
+	fmt.Println("Successed connect to DB")
 	db.Debug().AutoMigrate(models.Order{}, models.Item{})
 }
 

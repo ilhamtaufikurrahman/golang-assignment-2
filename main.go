@@ -5,10 +5,8 @@ import (
 	"assignment-2/router"
 )
 
-var PORT = ":8080"
-
 func main() {
 	database.StartDB()
-
-	router.StartServer().Run(PORT)
+	r := router.StartApp()
+	r.Run(":8080")
 }
