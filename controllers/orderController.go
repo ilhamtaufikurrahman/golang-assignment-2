@@ -68,11 +68,21 @@ func DeleteOrder(c *gin.Context) {
 		return
 	}
 
+	db.Delete(models.Item{}, "order_id", orderID)
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error":   "Error deleting item",
+			"message": err.Error(),
+		})
+		return
+	}
+
 	err = db.Delete(models.Order{}, "order_id", orderID).Error
 
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-			"error":   "Error deleting",
+			"error":   "Error deleting order",
 			"message": err.Error(),
 		})
 		return
@@ -139,36 +149,3 @@ func UpdateOrder(c *gin.Context) {
 		"data":    UpdateOrder,
 	})
 }
-
-// func UpdateItem(c *gin.Context) {
-// 	db := database.GetDB()
-// 	contentType := helpers.GetContentType(c)
-// 	itemID, err := strconv.Atoi(c.Param("ItemID"))
-// 	UpdateItem := models.Item{}
-
-// 	if err != nil {
-// 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-// 			"code":    "500",
-// 			"message": "Invalid param orderId",
-// 		})
-// 		return
-// 	}
-
-// 	if contentType == appJSON {
-// 		c.ShouldBindJSON(&UpdateItem)
-// 	} else {
-// 		c.ShouldBind(&UpdateItem)
-// 	}
-
-// 	err = db.Model(&UpdateItem).Where("item_id=?", itemID).Updates(&UpdateItem).Error
-
-// 	if err != nil {
-// 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
-// 			"error":   "Error updating",
-// 			"message": err.Error(),
-// 		})
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusOK, UpdateItem)
-// }
